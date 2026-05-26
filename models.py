@@ -86,6 +86,7 @@ class Attendance(db.Model):
     route_id = db.Column(db.Integer, db.ForeignKey('bus_route.id'), nullable=False)
     date = db.Column(db.Date, nullable=False)
     status = db.Column(db.String(10), nullable=False)  # 'Present', 'Absent'
+    reason = db.Column(db.String(200), nullable=True)  # Optional reason for absence
     marked_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     # Relationships

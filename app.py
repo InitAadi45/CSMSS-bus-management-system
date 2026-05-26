@@ -3,6 +3,7 @@ from functools import wraps
 from datetime import datetime, date, timedelta
 import io
 import csv
+import razorpay
 
 from flask import Flask, render_template, redirect, url_for, request, flash, jsonify, send_file
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -105,6 +106,9 @@ def register():
         phone = request.form.get('phone', '').strip()
         password = request.form.get('password', '')
         confirm_password = request.form.get('confirm_password', '')
+        role = request.form.get('role', 'student')
+        if role not in ['student', 'staff']:
+            role = 'student'
 
         if not name or not email or not password:
             flash("Please fill in all required fields.", "warning")
@@ -125,7 +129,7 @@ def register():
             email=email,
             phone=phone,
             password_hash=hashed_pass,
-            role='student'  # Registration only available for students
+            role=role
         )
         db.session.add(new_user)
         try:
@@ -711,7 +715,7 @@ def staff_attendance():
         
         # Load existing attendance for this date & route
         existing_records = Attendance.query.filter_by(route_id=selected_route_id, date=selected_date).all()
-        attendance_map = {att.student_id: att.status for att in existing_records}
+        attendance_map = {att.student_id: {'status': att.status, 'reason': getattr(att, 'reason', '')} for att in existing_records}
 
     if request.method == 'POST':
         # Process attendance marks
@@ -721,10 +725,12 @@ def staff_attendance():
         # Parse status from checkboxes/radios
         for s in students:
             status = request.form.get(f"status_{s.id}", "Absent")
+            reason = request.form.get(f"reason_{s.id}", "").strip()
             
             existing = Attendance.query.filter_by(student_id=s.id, date=attendance_date).first()
             if existing:
                 existing.status = status
+                existing.reason = reason if status == 'Absent' else None
                 existing.route_id = route_id
                 existing.marked_by = current_user.id
             else:
@@ -733,6 +739,7 @@ def staff_attendance():
                     route_id=route_id,
                     date=attendance_date,
                     status=status,
+                    reason=reason if status == 'Absent' else None,
                     marked_by=current_user.id
                 )
                 db.session.add(new_att)
@@ -967,6 +974,26 @@ def inject_branding():
         'college_address': 'Kanchanwadi, Paithan Road, Chhatrapati Sambhajinagar (Aurangabad), Maharashtra',
         'current_year': datetime.now().year
     }
+
+
+
+razorpay_client = razorpay.Client(auth=("rzp_test_Su3ycIqZsiOX8c", "YPioGMc2cj4iWfldOP9UD5ZH"))
+
+@app.route('/student/create-razorpay-order', methods=['POST'])
+@login_required
+@role_required('student')
+def create_order():
+    amount = int(request.json.get('amount', 0)) * 100 
+    
+    order_data = {
+        "amount": amount,
+         "currency": "INR",
+         "receipt": f"receipt_{current_user.id}"
+     }
+     
+    
+    order = razorpay_client.order.create(data=order_data)
+    return jsonify({'order_id': order['id'], 'amount': amount})
 
 if __name__ == '__main__':
     with app.app_context():

@@ -1,0 +1,3 @@
+Secret Key = "YPioGMc2cj4iWfldOP9UD5ZH"
+
+API Key="rzp_test_Su3ycIqZsiOX8c"

@@ -17,7 +17,7 @@ def seed_database():
     users_data = [
         # Admins
         {
-            "name": "CSMSS Admin Team",
+            "name": "aditya deshmukh",
             "email": "aadi45@gmail.com",
             "password": "Aadi@4555",
             "role": "admin",
@@ -25,14 +25,14 @@ def seed_database():
         },
         # Staff
         {
-            "name": "Pranav Pakhale (Transport Head)",
+            "name": "pranav pakhale",
             "email": "pranav123@gmail.com",
             "password": "pranav123",
             "role": "staff",
             "phone": "9604448770"
         },
         {
-            "name": "Mohit Kalwaghe(Bus In-Charge)",
+            "name": "mohit kalwaghe",
             "email": "mohit123@gmail.com",
             "password": "mohit123",
             "role": "staff",
@@ -40,14 +40,14 @@ def seed_database():
         },
         # Students
         {
-            "name": "Kedar Tagalpallewar",
-            "email": "kedar123@gmail.com",
-            "password": "kedar123",
+            "name": "mohit kalwaghe",
+            "email": "mohit_student@gmail.com",
+            "password": "mohit123",
             "role": "student",
             "phone": "7777712345"
         },
         {
-            "name": "Ashish Kamble",
+            "name": "ashish kamble",
             "email": "ashish123@gmail.com",
             "password": "ashish123",
             "role": "student",
@@ -137,8 +137,8 @@ def seed_database():
 
     # 3. Create News Notices
     print("Seeding News & Notices...")
-    admin_user = seeded_users["admin@csmss.edu"]
-    staff_user = seeded_users["staff@csmss.edu"]
+    admin_user = seeded_users["aadi45@gmail.com"]
+    staff_user = seeded_users["pranav123@gmail.com"]
     
     notices_data = [
         {
@@ -175,8 +175,8 @@ def seed_database():
 
     # 4. Create Bus Passes (Active & Expired)
     print("Seeding Bus Passes...")
-    student_1 = seeded_users["student@csmss.edu"]
-    student_2 = seeded_users["rahul.sharma@csmss.edu"]
+    student_1 = seeded_users["mohit_student@gmail.com"]
+    student_2 = seeded_users["ashish123@gmail.com"]
     # student_3 (priya.deshmukh) has no pass (to verify empty state)
 
     today = date.today()
@@ -271,9 +271,9 @@ def seed_database():
     print("Attendance logs seeded successfully.")
     
     print("\nDatabase seeding completed successfully!")
-    print("Admin:   email: admin@csmss.edu   password: admin123")
-    print("Staff:   email: staff@csmss.edu   password: staff123")
-    print("Student: email: student@csmss.edu password: student123")
+    print("Admin:   email: aadi45@gmail.com   password: Aadi@4555")
+    print("Staff:   email: pranav123@gmail.com   password: pranav123")
+    print("Student: email: mohit_student@gmail.com password: mohit123")
 
 if __name__ == '__main__':
     with app.app_context():

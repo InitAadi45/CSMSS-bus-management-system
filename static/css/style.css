@@ -5,37 +5,21 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap');
 
-:root {
-    --primary-color: #1e3a8a; /* CSMSS Deep Royal Blue */
-    --primary-light: #2563eb;
-    --secondary-color: #d97706; /* Gold / Amber */
-    --accent-color: #dc2626; /* Crimson Red */
-    --accent-light: #f87171;
-    --dark-bg: #0f172a;
-    --light-bg: #f8fafc;
-    --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
-    --hover-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.15);
-    --glass-bg: rgba(255, 255, 255, 0.75);
-    --glass-border: rgba(255, 255, 255, 0.25);
-    --text-main: #334155;
-    --text-muted: #64748b;
-    --font-heading: 'Outfit', sans-serif;
-    --font-body: 'Poppins', sans-serif;
-}
+
 
 /* Global Reset & Typography */
 body {
-    font-family: var(--font-body);
-    background-color: var(--light-bg);
-    color: var(--text-main);
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8fafc;
+    color: #334155;
     overflow-x: hidden;
     scroll-behavior: smooth;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
+    font-family: 'Outfit', sans-serif;
     font-weight: 700;
-    color: var(--primary-color);
+    color: #1e3a8a;
 }
 
 /* Premium Animations */
@@ -98,7 +82,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hero-title {
-    font-family: var(--font-heading);
+    font-family: 'Outfit', sans-serif;
     font-weight: 800;
     font-size: 3.5rem;
     text-transform: uppercase;
@@ -128,7 +112,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .nav-link {
-    font-family: var(--font-heading);
+    font-family: 'Outfit', sans-serif;
     font-weight: 500;
     letter-spacing: 0.5px;
     padding: 0.5rem 1rem !important;
@@ -142,7 +126,7 @@ h1, h2, h3, h4, h5, h6 {
     height: 2px;
     bottom: 0;
     left: 10px;
-    background-color: var(--secondary-color);
+    background-color: #d97706;
     transition: width 0.3s ease;
 }
 
@@ -158,7 +142,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .sidebar-glass {
     width: 280px;
-    background: linear-gradient(180deg, var(--primary-color) 0%, var(--dark-bg) 100%);
+    background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%);
     color: #ffffff;
     padding: 2rem 1.5rem;
     display: flex;
@@ -176,7 +160,7 @@ h1, h2, h3, h4, h5, h6 {
     color: rgba(255, 255, 255, 0.75);
     text-decoration: none;
     font-weight: 500;
-    font-family: var(--font-heading);
+    font-family: 'Outfit', sans-serif;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -191,7 +175,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .sidebar-link.active {
-    background: var(--secondary-color);
+    background: #d97706;
     color: #ffffff;
     box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);
 }
@@ -199,7 +183,7 @@ h1, h2, h3, h4, h5, h6 {
 .dashboard-content {
     flex: 1;
     padding: 2.5rem;
-    background-color: var(--light-bg);
+    background-color: #f8fafc;
 }
 
 /* Card Design & Micro-animations */
@@ -207,31 +191,31 @@ h1, h2, h3, h4, h5, h6 {
     background: #ffffff;
     border: none;
     border-radius: 20px;
-    box-shadow: var(--card-shadow);
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     overflow: hidden;
 }
 
 .card-premium:hover {
     transform: translateY(-6px);
-    box-shadow: var(--hover-shadow);
+    box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.15);
 }
 
 .card-stat {
-    border-left: 5px solid var(--primary-color);
+    border-left: 5px solid #1e3a8a;
 }
 
 .card-stat.stat-passes {
-    border-left-color: var(--secondary-color);
+    border-left-color: #d97706;
 }
 
 .card-stat.stat-delays {
-    border-left-color: var(--accent-color);
+    border-left-color: #dc2626;
 }
 
 /* Premium Buttons */
 .btn-csmss-primary {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
     color: #ffffff;
     border: none;
     border-radius: 12px;
@@ -248,7 +232,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-csmss-secondary {
-    background: linear-gradient(135deg, var(--secondary-color) 0%, #f59e0b 100%);
+    background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
     color: #ffffff;
     border: none;
     border-radius: 12px;
@@ -269,13 +253,13 @@ h1, h2, h3, h4, h5, h6 {
     background: #ffffff;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: var(--card-shadow);
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
 }
 
 .table-premium th {
-    background-color: var(--primary-color);
+    background-color: #1e3a8a;
     color: #ffffff;
-    font-family: var(--font-heading);
+    font-family: 'Outfit', sans-serif;
     font-weight: 600;
     border: none;
     padding: 1.2rem 1rem;
@@ -311,11 +295,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .alert-toast-danger {
-    border-left: 6px solid var(--accent-color);
+    border-left: 6px solid #dc2626;
 }
 
 .alert-toast-warning {
-    border-left: 6px solid var(--secondary-color);
+    border-left: 6px solid #d97706;
 }
 
 /* QR Code & Bus Pass Layout */
@@ -358,7 +342,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Checkout simulated flow */
 .modal-payment-header {
-    background-color: var(--primary-color);
+    background-color: #1e3a8a;
     color: #ffffff;
 }
 
@@ -376,7 +360,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .payment-method-btn:hover, .payment-method-btn.active {
-    border-color: var(--primary-color);
+    border-color: #1e3a8a;
     background-color: rgba(37, 99, 235, 0.05);
 }
 
@@ -384,7 +368,7 @@ h1, h2, h3, h4, h5, h6 {
     content: '\f058';
     font-family: 'Font Awesome 5 Free';
     font-weight: 900;
-    color: var(--primary-color);
+    color: #1e3a8a;
     margin-left: auto;
 }
 

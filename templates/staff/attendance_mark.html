@@ -68,6 +68,7 @@
                                 <th>Email Address</th>
                                 <th>Mobile Number</th>
                                 <th class="text-center">Status Toggle</th>
+                                <th>Reason (If Absent)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -80,13 +81,16 @@
                                     <td class="text-center">
                                         <div class="btn-group" role="group">
                                             <input type="radio" class="btn-check" name="status_{{ s.id }}" id="pres_{{ s.id }}" value="Present" 
-                                                {% if attendance_map.get(s.id) == 'Present' %}checked{% endif %}>
+                                                {% if attendance_map.get(s.id, {}).get('status') == 'Present' %}checked{% endif %}>
                                             <label class="btn btn-sm btn-outline-success px-3" for="pres_{{ s.id }}"><i class="fas fa-check"></i> Present</label>
 
                                             <input type="radio" class="btn-check" name="status_{{ s.id }}" id="abs_{{ s.id }}" value="Absent" 
-                                                {% if attendance_map.get(s.id) == 'Absent' or not attendance_map.get(s.id) %}checked{% endif %}>
+                                                {% if attendance_map.get(s.id, {}).get('status') == 'Absent' or not attendance_map.get(s.id) %}checked{% endif %}>
                                             <label class="btn btn-sm btn-outline-danger px-3" for="abs_{{ s.id }}"><i class="fas fa-times"></i> Absent</label>
                                         </div>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="reason_{{ s.id }}" class="form-control form-control-sm" placeholder="Optional reason..." value="{{ attendance_map.get(s.id, {}).get('reason', '') or '' }}" style="border-radius: 8px;">
                                     </td>
                                 </tr>
                                 {% endfor %}
