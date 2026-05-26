@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Home{% endblock %} - {{ college_name }}</title>
+    <!-- Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-glass fixed-top no-print">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="CSMSS Logo">
+                <div>
+                    <span class="d-block fw-bold fs-5 text-white" style="font-family: 'Outfit';">CSMSS</span>
+                    <span class="d-block text-warning" style="font-size: 0.65rem; font-weight: 500;">BUS CELL</span>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url_for('home') }}"><i class="fas fa-home me-1"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url_for('schedules') }}"><i class="fas fa-bus me-1"></i> Routes & Timings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url_for('notices_list') }}"><i class="fas fa-bullhorn me-1"></i> Notices</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url_for('contact') }}"><i class="fas fa-envelope me-1"></i> Contact</a>
+                    </li>
+                    
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item dropdown ms-lg-3">
+                            <a class="nav-link dropdown-toggle btn btn-csmss-secondary text-white px-3" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle me-1"></i> {{ current_user.name }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg mt-2" style="border-radius:12px;">
+                                {% if current_user.role == 'admin' %}
+                                    <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}"><i class="fas fa-chart-pie me-2 text-primary"></i> Admin Dashboard</a></li>
+                                {% elif current_user.role == 'staff' %}
+                                    <li><a class="dropdown-item" href="{{ url_for('staff_dashboard') }}"><i class="fas fa-user-cog me-2 text-primary"></i> Staff Dashboard</a></li>
+                                {% else %}
+                                    <li><a class="dropdown-item" href="{{ url_for('student_dashboard') }}"><i class="fas fa-id-card me-2 text-primary"></i> Student Dashboard</a></li>
+                                {% endif %}
+                                
+                                {% if current_user.role != 'admin' %}
+                                    <li><a class="dropdown-item" href="{{ url_for('user_profile') }}"><i class="fas fa-user-edit me-2 text-primary"></i> Edit Profile</a></li>
+                                {% endif %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item ms-lg-3">
+                            <a class="btn btn-outline-light px-4 border-2" href="{{ url_for('login') }}" style="border-radius: 12px; font-weight: 600;"><i class="fas fa-sign-in-alt me-1"></i> Sign In</a>
+                        </li>
+                        <li class="nav-item ms-2">
+                            <a class="btn btn-csmss-secondary px-4 text-white" href="{{ url_for('register') }}"><i class="fas fa-user-plus me-1"></i> Register</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Global Toast/Alert Message Area -->
+    <div id="toastContainer" style="position: fixed; top: 80px; right: 24px; z-index: 1060;" class="no-print">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-toast alert-toast-{{ category if category != 'error' else 'danger' }} d-flex align-items-center justify-content-between p-3 mb-2 alert-dismissible fade show" role="alert">
+                        <div class="d-flex align-items-center gap-2">
+                            {% if category == 'success' %}
+                                <i class="fas fa-check-circle text-success fs-5"></i>
+                            {% elif category == 'danger' or category == 'error' %}
+                                <i class="fas fa-exclamation-circle text-danger fs-5"></i>
+                            {% else %}
+                                <i class="fas fa-info-circle text-primary fs-5"></i>
+                            {% endif %}
+                            <span>{{ message }}</span>
+                        </div>
+                        <button type="button" class="btn-close" style="font-size: 0.8rem;" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content Container -->
+    <div style="margin-top: 80px;">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="bg-dark text-light pt-5 pb-4 mt-5 no-print" style="border-top: 5px solid var(--secondary-color);">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5 mb-4">
+                    <h5 class="text-warning fw-bold mb-3">{{ college_name }}</h5>
+                    <p class="text-secondary small">{{ college_address }}</p>
+                    <p class="small text-secondary mt-3">An initiative by CSMSS to streamline student commuting and transportation management using dynamic smart routing systems.</p>
+                </div>
+                <div class="col-md-3 mb-4 ms-auto">
+                    <h5 class="text-white fw-bold mb-3">Quick Navigation</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('home') }}" class="text-secondary text-decoration-none small d-block py-1 hover-link"><i class="fas fa-chevron-right me-1 text-warning"></i> Home</a></li>
+                        <li><a href="{{ url_for('schedules') }}" class="text-secondary text-decoration-none small d-block py-1 hover-link"><i class="fas fa-chevron-right me-1 text-warning"></i> Timetables</a></li>
+                        <li><a href="{{ url_for('notices_list') }}" class="text-secondary text-decoration-none small d-block py-1 hover-link"><i class="fas fa-chevron-right me-1 text-warning"></i> Notices</a></li>
+                        <li><a href="{{ url_for('contact') }}" class="text-secondary text-decoration-none small d-block py-1 hover-link"><i class="fas fa-chevron-right me-1 text-warning"></i> Help Desk</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5 class="text-white fw-bold mb-3">Transport Helpline</h5>
+                    <p class="small text-secondary mb-1"><i class="fas fa-phone-alt text-warning me-2"></i> +91 240 2631101 / 2631102</p>
+                    <p class="small text-secondary mb-1"><i class="fas fa-envelope text-warning me-2"></i> transport@csmss.engg.edu.in</p>
+                    <p class="small text-secondary mb-1"><i class="fas fa-map-marker-alt text-warning me-2"></i> CSMSS CSCOE campus, Kanchanwadi</p>
+                </div>
+            </div>
+            <hr class="border-secondary mt-4 mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="small text-secondary mb-0">&copy; {{ current_year }} CSMSS Chhatrapati Shahu College of Engineering. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="small text-secondary mb-0">Designed & Maintained by CSMSS transport cell.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

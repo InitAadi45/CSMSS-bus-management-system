@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Staff Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Staff Sidebar -->
+    <div class="sidebar-glass no-print">
+        <div class="text-center mb-4 pb-3 border-bottom">
+            <span class="badge bg-primary text-white px-3 py-2 text-uppercase fw-bold">Staff Portal</span>
+            <p class="small text-white-50 mt-2 mb-0">CSMSS Transport Staff</p>
+        </div>
+        <a href="{{ url_for('staff_dashboard') }}" class="sidebar-link active"><i class="fas fa-columns"></i> Staff Home</a>
+        <a href="{{ url_for('staff_attendance') }}" class="sidebar-link"><i class="fas fa-clipboard-check"></i> Mark Commute</a>
+        <a href="{{ url_for('staff_attendance_log') }}" class="sidebar-link"><i class="fas fa-history"></i> Attendance Logs</a>
+        <a href="{{ url_for('staff_students') }}" class="sidebar-link"><i class="fas fa-user-graduate"></i> Commuter Registry</a>
+        <a href="{{ url_for('staff_notices') }}" class="sidebar-link"><i class="fas fa-exclamation-circle"></i> Broadcast Delay</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="dashboard-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="fw-bold mb-1" style="font-family:'Outfit';">Staff Portal Overview</h1>
+                <p class="text-muted small">Access active student commuters and manage bus route delay broadcasts.</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('staff_attendance') }}" class="btn btn-csmss-primary"><i class="fas fa-clipboard-check me-1"></i> Mark Daily Attendance</a>
+                <a href="{{ url_for('staff_notices') }}" class="btn btn-csmss-secondary"><i class="fas fa-exclamation-triangle me-1"></i> Log Bus Delay</a>
+            </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-6">
+                <div class="card card-premium p-4 border-0 h-100">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-primary-subtle text-primary p-3 rounded-4">
+                            <i class="fas fa-bus fa-2x"></i>
+                        </div>
+                        <div>
+                            <span class="text-muted small fw-bold d-block">ACTIVE ROUTE DIRECTORY</span>
+                            <h3 class="fw-bold mb-0 text-dark">{{ total_routes }} registered routes</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card card-premium p-4 border-0 h-100">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-warning-subtle text-warning p-3 rounded-4">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                        <div>
+                            <span class="text-muted small fw-bold d-block">STUDENTS COMMUTING</span>
+                            <h3 class="fw-bold mb-0 text-dark">{{ student_count }} student records</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Active Buses Status -->
+            <div class="col-md-7">
+                <div class="card card-premium p-4 border-0">
+                    <h5 class="fw-bold mb-4 text-dark"><i class="fas fa-bus-alt text-warning me-2"></i> Commute Timetable Status</h5>
+                    <div class="table-responsive">
+                        <table class="table table-sm small">
+                            <thead>
+                                <tr class="table-light">
+                                    <th>Bus No.</th>
+                                    <th>Route Name</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if active_routes %}
+                                    {% for r in active_routes %}
+                                    <tr>
+                                        <td><span class="badge bg-primary">{{ r.bus_number }}</span></td>
+                                        <td><strong>{{ r.route_name }}</strong></td>
+                                        <td>
+                                            {% if r.status == 'On Time' %}
+                                                <span class="text-success"><i class="fas fa-check-circle me-1"></i> On Time</span>
+                                            {% else %}
+                                                <span class="text-danger"><i class="fas fa-exclamation-triangle me-1"></i> {{ r.status }}</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted">No bus routes configured.</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent notices posted by staff -->
+            <div class="col-md-5">
+                <div class="card card-premium p-4 border-0 h-100">
+                    <h5 class="fw-bold mb-4 text-dark"><i class="fas fa-history text-primary me-2"></i> Recent Alerts Posted</h5>
+                    
+                    {% if recent_notices %}
+                        <div class="d-flex flex-column gap-3">
+                            {% for notice in recent_notices %}
+                            <div class="border-bottom pb-2">
+                                <strong class="text-dark d-block fs-6 mb-1">{{ notice.title }}</strong>
+                                <p class="text-muted small mb-1 text-truncate">{{ notice.body }}</p>
+                                <small class="text-secondary" style="font-size:0.7rem;">{{ notice.created_at.strftime('%Y-%m-%d %I:%M %p') }}</small>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4 text-muted">
+                            <p class="small mb-0">You haven't posted any notices yet.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

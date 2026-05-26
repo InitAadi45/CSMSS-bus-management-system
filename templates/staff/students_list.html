@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Commuter Registry{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Staff Sidebar -->
+    <div class="sidebar-glass no-print">
+        <div class="text-center mb-4 pb-3 border-bottom">
+            <span class="badge bg-primary text-white px-3 py-2 text-uppercase fw-bold">Staff Portal</span>
+            <p class="small text-white-50 mt-2 mb-0">CSMSS Transport Staff</p>
+        </div>
+        <a href="{{ url_for('staff_dashboard') }}" class="sidebar-link"><i class="fas fa-columns"></i> Staff Home</a>
+        <a href="{{ url_for('staff_attendance') }}" class="sidebar-link"><i class="fas fa-clipboard-check"></i> Mark Commute</a>
+        <a href="{{ url_for('staff_attendance_log') }}" class="sidebar-link"><i class="fas fa-history"></i> Attendance Logs</a>
+        <a href="{{ url_for('staff_students') }}" class="sidebar-link active"><i class="fas fa-user-graduate"></i> Commuter Registry</a>
+        <a href="{{ url_for('staff_notices') }}" class="sidebar-link"><i class="fas fa-exclamation-circle"></i> Broadcast Delay</a>
+    </div>
+
+    <!-- Content -->
+    <div class="dashboard-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="fw-bold mb-1" style="font-family:'Outfit';">Student Commuter Registry</h1>
+                <p class="text-muted small">Read-only student records and search lists.</p>
+            </div>
+            <!-- Search -->
+            <div class="w-25 no-print">
+                <input type="text" class="form-control table-search-input py-2" data-target-table="studentsTable" placeholder="Search commuters..." style="border-radius:10px;">
+            </div>
+        </div>
+
+        <div class="card card-premium overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover table-premium mb-0" id="studentsTable">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Commuter ID</th>
+                            <th>Student Name</th>
+                            <th>Email Address</th>
+                            <th>Mobile Number</th>
+                            <th>Pass Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if students %}
+                            {% for std in students %}
+                            <tr>
+                                <td class="ps-4"><span class="badge bg-secondary px-3 py-2" style="border-radius:8px;">#{{ std.id }}</span></td>
+                                <td><strong class="text-dark">{{ std.name }}</strong></td>
+                                <td class="small">{{ std.email }}</td>
+                                <td class="small">{{ std.phone or 'N/A' }}</td>
+                                <td>
+                                    {% if std.passes %}
+                                        <span class="badge bg-success-subtle text-success px-2 py-1"><i class="fas fa-check-circle me-1"></i> Pass Registered</span>
+                                    {% else %}
+                                        <span class="badge bg-warning-subtle text-warning px-2 py-1"><i class="fas fa-exclamation-circle me-1"></i> No Active Pass</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center py-5 text-muted">
+                                    <i class="fas fa-users fa-2x mb-3 text-secondary"></i>
+                                    <p class="mb-0">No student commuters registered in the system.</p>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

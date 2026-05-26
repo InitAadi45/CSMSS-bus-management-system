@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Register New Route{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Admin Sidebar -->
+    <div class="sidebar-glass no-print">
+        <div class="text-center mb-4 pb-3 border-bottom">
+            <span class="badge bg-warning text-dark px-3 py-2 text-uppercase fw-bold">Admin Controller</span>
+            <p class="small text-white-50 mt-2 mb-0">CSMSS Transportation Cell</p>
+        </div>
+        <a href="{{ url_for('admin_dashboard') }}" class="sidebar-link"><i class="fas fa-chart-line"></i> Dashboard Home</a>
+        <a href="{{ url_for('admin_routes') }}" class="sidebar-link active"><i class="fas fa-route"></i> Manage Routes</a>
+        <a href="{{ url_for('admin_staff') }}" class="sidebar-link"><i class="fas fa-users-cog"></i> Manage Staff</a>
+        <a href="{{ url_for('admin_students') }}" class="sidebar-link"><i class="fas fa-user-graduate"></i> Commuter Directory</a>
+        <a href="{{ url_for('admin_passes') }}" class="sidebar-link"><i class="fas fa-id-card"></i> Commuter Passes</a>
+        <a href="{{ url_for('admin_payments') }}" class="sidebar-link"><i class="fas fa-money-bill-wave"></i> Payment Logs</a>
+        <a href="{{ url_for('admin_attendance') }}" class="sidebar-link"><i class="fas fa-clipboard-list"></i> Commute Attendance</a>
+        <a href="{{ url_for('admin_notices') }}" class="sidebar-link"><i class="fas fa-bullhorn"></i> Notice Settings</a>
+        <a href="{{ url_for('admin_settings') }}" class="sidebar-link"><i class="fas fa-cog"></i> System Settings</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="dashboard-content">
+        <div class="mb-4">
+            <h1 class="fw-bold mb-1" style="font-family:'Outfit';">Register New Route</h1>
+            <p class="text-muted small">Configure a new college transport line with exact schedules.</p>
+        </div>
+
+        <div class="card card-premium p-5 border-0">
+            <form action="{{ url_for('admin_add_route') }}" method="POST">
+                <div class="row g-3 mb-4">
+                    <div class="col-md-8">
+                        <label class="form-label small fw-bold">Route Commute Name</label>
+                        <input type="text" class="form-control py-2" name="route_name" required placeholder="e.g. Chhatrapati Sambhajinagar - Paithan - CSCOE Campus" style="border-radius:10px;">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold">Bus Code / Number</label>
+                        <input type="text" class="form-control py-2" name="bus_number" required placeholder="e.g. MH-20-AB-1234" style="border-radius:10px;">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label small fw-bold">Via Points (Comma-separated commute stops)</label>
+                    <input type="text" class="form-control py-2" name="via_points" required placeholder="e.g. CIDCO, Kranti Chowk, Railway Station, Kanchanwadi" style="border-radius:10px;">
+                    <div class="form-text text-muted small">Type stops in order to help students find boarding zones.</div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold">Morning Boarding Pickup Time</label>
+                        <input type="text" class="form-control py-2" name="pickup_time" required placeholder="e.g. 07:30 AM" style="border-radius:10px;">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold">Evening Campus Departure Dropoff Time</label>
+                        <input type="text" class="form-control py-2" name="dropoff_time" required placeholder="e.g. 05:30 PM" style="border-radius:10px;">
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3">
+                    <button type="submit" class="btn btn-csmss-primary py-3 px-5"><i class="fas fa-plus-circle me-1"></i> Register Route</button>
+                    <a href="{{ url_for('admin_routes') }}" class="btn btn-outline-secondary py-3 px-5" style="border-radius: 12px;">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

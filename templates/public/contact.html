@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Contact & Help Desk{% endblock %}
+
+{% block content %}
+<div class="container my-5 py-4">
+    <div class="text-center mb-5 animate-fade-in">
+        <h1 class="fw-bold" style="font-family: 'Outfit'; color: var(--primary-color);">Contact & Support</h1>
+        <p class="text-muted">Reach out to the CSMSS College Bus Commute Help Desk for queries, feedback, or emergencies.</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Contact Information Cards -->
+        <div class="col-md-5">
+            <div class="card card-premium p-4 mb-4 border-0">
+                <h4 class="fw-bold mb-4" style="color: var(--primary-color);"><i class="fas fa-id-card text-warning me-2"></i> Transport Cell</h4>
+                
+                <div class="d-flex align-items-start gap-3 mb-4">
+                    <div class="bg-primary-subtle text-primary p-3 rounded-3">
+                        <i class="fas fa-map-marker-alt fa-lg"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Office Address</h6>
+                        <p class="text-muted small mb-0">{{ college_address }}</p>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start gap-3 mb-4">
+                    <div class="bg-warning-subtle text-warning p-3 rounded-3">
+                        <i class="fas fa-phone-alt fa-lg"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Helpline Numbers</h6>
+                        <p class="text-muted small mb-0">+91 240 2631101, +91 240 2631102</p>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start gap-3">
+                    <div class="bg-danger-subtle text-danger p-3 rounded-3">
+                        <i class="fas fa-envelope fa-lg"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Support Email</h6>
+                        <p class="text-muted small mb-0">transport@csmss.engg.edu.in</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Campus Image or Map placeholder -->
+            <div class="card card-premium overflow-hidden border-0 bg-dark text-white p-0 text-center">
+                <img src="{{ url_for('static', filename='images/bus_banner.png') }}" class="img-fluid" alt="CSMSS Campus Bus">
+            </div>
+        </div>
+
+        <!-- Simulated Inquiry Form -->
+        <div class="col-md-7">
+            <div class="card card-premium p-5 border-0 h-100">
+                <h4 class="fw-bold mb-4" style="color: var(--primary-color);"><i class="fas fa-paper-plane text-warning me-2"></i> Submit Inquiry</h4>
+                <p class="text-muted small mb-4">Have questions about new bus routes or pass costs? Fill in the details below, and our transport cell will get back to you shortly.</p>
+                
+                <form onsubmit="event.preventDefault(); alert('Your inquiry has been logged! We will get back to you soon.'); this.reset();">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Full Name</label>
+                            <input type="text" class="form-control py-2" required placeholder="John Doe" style="border-radius:10px;">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Email Address</label>
+                            <input type="email" class="form-control py-2" required placeholder="john@example.com" style="border-radius:10px;">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Subject</label>
+                        <input type="text" class="form-control py-2" required placeholder="e.g. Bus route extension to CIDCO" style="border-radius:10px;">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold">Your Inquiry / Message</label>
+                        <textarea class="form-control" rows="5" required placeholder="Type details here..." style="border-radius:10px;"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-csmss-primary py-3 px-5"><i class="fas fa-paper-plane me-2"></i> Submit Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

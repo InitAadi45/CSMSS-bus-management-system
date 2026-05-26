@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Attendance Log History{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Staff Sidebar -->
+    <div class="sidebar-glass no-print">
+        <div class="text-center mb-4 pb-3 border-bottom">
+            <span class="badge bg-primary text-white px-3 py-2 text-uppercase fw-bold">Staff Portal</span>
+            <p class="small text-white-50 mt-2 mb-0">CSMSS Transport Staff</p>
+        </div>
+        <a href="{{ url_for('staff_dashboard') }}" class="sidebar-link"><i class="fas fa-columns"></i> Staff Home</a>
+        <a href="{{ url_for('staff_attendance') }}" class="sidebar-link"><i class="fas fa-clipboard-check"></i> Mark Commute</a>
+        <a href="{{ url_for('staff_attendance_log') }}" class="sidebar-link active"><i class="fas fa-history"></i> Attendance Logs</a>
+        <a href="{{ url_for('staff_students') }}" class="sidebar-link"><i class="fas fa-user-graduate"></i> Commuter Registry</a>
+        <a href="{{ url_for('staff_notices') }}" class="sidebar-link"><i class="fas fa-exclamation-circle"></i> Broadcast Delay</a>
+    </div>
+
+    <!-- Content -->
+    <div class="dashboard-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="fw-bold mb-1" style="font-family:'Outfit';">Attendance History Logs</h1>
+                <p class="text-muted small">Verify previously submitted commuter lists logged by your account.</p>
+            </div>
+            <!-- Search -->
+            <div class="w-25 no-print">
+                <input type="text" class="form-control table-search-input py-2" data-target-table="logsTable" placeholder="Search logs..." style="border-radius:10px;">
+            </div>
+        </div>
+
+        <div class="card card-premium overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover table-premium mb-0" id="logsTable">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Commute Date</th>
+                            <th>Student Commuter Name</th>
+                            <th>Email Address</th>
+                            <th>Bus Route Details</th>
+                            <th class="text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if logs %}
+                            {% for log in logs %}
+                            <tr>
+                                <td class="ps-4"><strong class="text-dark">{{ log.date.strftime('%Y-%m-%d') }}</strong></td>
+                                <td>{{ log.student.name }}</td>
+                                <td class="small">{{ log.student.email }}</td>
+                                <td class="small"><span class="badge bg-secondary-subtle text-secondary">Bus {{ log.route.bus_number }}</span> {{ log.route.route_name }}</td>
+                                <td class="text-center">
+                                    {% if log.status == 'Present' %}
+                                        <span class="badge bg-success-subtle text-success"><i class="fas fa-check me-1"></i> Present</span>
+                                    {% else %}
+                                        <span class="badge bg-danger-subtle text-danger"><i class="fas fa-times me-1"></i> Absent</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center py-5 text-muted">
+                                    <i class="fas fa-history fa-2x mb-3 text-secondary"></i>
+                                    <p class="mb-0">No past student attendance logs registered under this account.</p>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

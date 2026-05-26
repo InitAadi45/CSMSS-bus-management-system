@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}System Settings{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Admin Sidebar -->
+    <div class="sidebar-glass no-print">
+        <div class="text-center mb-4 pb-3 border-bottom">
+            <span class="badge bg-warning text-dark px-3 py-2 text-uppercase fw-bold">Admin Controller</span>
+            <p class="small text-white-50 mt-2 mb-0">CSMSS Transportation Cell</p>
+        </div>
+        <a href="{{ url_for('admin_dashboard') }}" class="sidebar-link"><i class="fas fa-chart-line"></i> Dashboard Home</a>
+        <a href="{{ url_for('admin_routes') }}" class="sidebar-link"><i class="fas fa-route"></i> Manage Routes</a>
+        <a href="{{ url_for('admin_staff') }}" class="sidebar-link"><i class="fas fa-users-cog"></i> Manage Staff</a>
+        <a href="{{ url_for('admin_students') }}" class="sidebar-link"><i class="fas fa-user-graduate"></i> Commuter Directory</a>
+        <a href="{{ url_for('admin_passes') }}" class="sidebar-link"><i class="fas fa-id-card"></i> Commuter Passes</a>
+        <a href="{{ url_for('admin_payments') }}" class="sidebar-link"><i class="fas fa-money-bill-wave"></i> Payment Logs</a>
+        <a href="{{ url_for('admin_attendance') }}" class="sidebar-link"><i class="fas fa-clipboard-list"></i> Commute Attendance</a>
+        <a href="{{ url_for('admin_notices') }}" class="sidebar-link"><i class="fas fa-bullhorn"></i> Notice Settings</a>
+        <a href="{{ url_for('admin_settings') }}" class="sidebar-link active"><i class="fas fa-cog"></i> System Settings</a>
+    </div>
+
+    <!-- Content -->
+    <div class="dashboard-content">
+        <div class="mb-4">
+            <h1 class="fw-bold mb-1" style="font-family:'Outfit';">System Configurations</h1>
+            <p class="text-muted small">Tweak global settings including payment key simulations, SMTP hosts, and pricing tables.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-7">
+                <div class="card card-premium p-5 border-0">
+                    <h5 class="fw-bold mb-4 text-dark"><i class="fas fa-envelope-open-text text-primary me-2"></i> Mail Transfer Agent (MTA)</h5>
+                    <form action="{{ url_for('admin_settings') }}" method="POST">
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-8">
+                                <label class="form-label small fw-bold">SMTP Relay Host</label>
+                                <input type="text" class="form-control" name="smtp_host" value="smtp.gmail.com" style="border-radius:10px;">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold">MTA Port</label>
+                                <input type="number" class="form-control" name="smtp_port" value="587" style="border-radius:10px;">
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">Authentication User</label>
+                                <input type="email" class="form-control" name="smtp_user" value="transport-alerts@csmss.engg.edu.in" style="border-radius:10px;">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">Authentication Password</label>
+                                <input type="password" class="form-control" name="smtp_pass" placeholder="••••••••••••••••" style="border-radius:10px;">
+                            </div>
+                        </div>
+
+                        <h5 class="fw-bold mb-4 text-dark pt-3 border-top"><i class="fas fa-wallet text-primary me-2"></i> Payment Gateway Credentials</h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">Razorpay Key ID</label>
+                                <input type="text" class="form-control" value="rzp_test_CSMSS5105" disabled style="border-radius:10px;">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">Razorpay Key Secret</label>
+                                <input type="password" class="form-control" value="••••••••••••••••••••••••" disabled style="border-radius:10px;">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-csmss-primary py-3 px-5"><i class="fas fa-save me-1"></i> Save Configurations</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Price settings details -->
+            <div class="col-md-5">
+                <div class="card card-premium p-4 border-0">
+                    <h5 class="fw-bold mb-3 text-dark"><i class="fas fa-tags text-warning me-2"></i> Pass Pricing Grid</h5>
+                    <p class="text-muted small">Pricing variables currently charged for smart QR passes:</p>
+                    
+                    <ul class="list-group list-group-flush small">
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent">
+                            <div>
+                                <strong class="text-dark d-block">Monthly Commuter Pass</strong>
+                                <span class="text-muted">Renewable every 30 days.</span>
+                            </div>
+                            <span class="badge bg-success px-3 py-2 text-dark fw-bold fs-6" style="background-color: rgba(16, 185, 129, 0.15) !important;">₹500.00</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent">
+                            <div>
+                                <strong class="text-dark d-block">Quarterly Commuter Pass</strong>
+                                <span class="text-muted">Renewable every 90 days.</span>
+                            </div>
+                            <span class="badge bg-success px-3 py-2 text-dark fw-bold fs-6" style="background-color: rgba(16, 185, 129, 0.15) !important;">₹1,400.00</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent">
+                            <div>
+                                <strong class="text-dark d-block">Yearly Commuter Pass</strong>
+                                <span class="text-muted">Renewable every 365 days.</span>
+                            </div>
+                            <span class="badge bg-success px-3 py-2 text-dark fw-bold fs-6" style="background-color: rgba(16, 185, 129, 0.15) !important;">₹5,000.00</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

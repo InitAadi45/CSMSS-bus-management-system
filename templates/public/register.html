@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Commuter Registration{% endblock %}
+
+{% block content %}
+<div class="container my-5 py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card card-premium p-5 animate-fade-in">
+                <div class="text-center mb-4">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="CSMSS Logo" style="height: 80px;" class="mb-3">
+                    <h3 class="fw-bold" style="font-family: 'Outfit';">Commuter Registration</h3>
+                    <p class="text-muted small">Create a profile to buy passes, track buses, and check timetables.</p>
+                </div>
+                
+                <form action="{{ url_for('register') }}" method="POST">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Full Name" required style="border-radius:12px;">
+                                <label for="name"><i class="fas fa-user me-2 text-primary"></i> Full Name</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required style="border-radius:12px;">
+                        <label for="email"><i class="fas fa-envelope me-2 text-primary"></i> Email Address</label>
+                        <div class="form-text text-muted small">Please use your college-provided or primary email.</div>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone Number" style="border-radius:12px;">
+                        <label for="phone"><i class="fas fa-phone me-2 text-primary"></i> Mobile Number (Optional)</label>
+                    </div>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Password" required style="border-radius:12px;">
+                                <label for="password"><i class="fas fa-lock me-2 text-primary"></i> Password</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required style="border-radius:12px;">
+                                <label for="confirm_password"><i class="fas fa-lock me-2 text-primary"></i> Confirm Password</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-csmss-primary w-100 py-3 mb-3"><i class="fas fa-user-plus me-2"></i> Register Profile</button>
+                    
+                    <div class="text-center">
+                        <p class="text-muted small mb-0">Already registered?</p>
+                        <a href="{{ url_for('login') }}" class="text-primary fw-bold small text-decoration-none">Sign In Here</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Subscribe Bus Pass{% endblock %}
+
+{% block content %}
+<div class="container my-5 py-4">
+    <div class="text-center mb-5 animate-fade-in">
+        <h1 class="fw-bold" style="font-family: 'Outfit'; color: var(--primary-color);">Purchase / Renew Bus Pass</h1>
+        <p class="text-muted">Select a commute subscription plan below to buy or renew your digital college pass.</p>
+    </div>
+
+    <!-- Pricing Cards Row -->
+    <div class="row g-4 justify-content-center mb-5">
+        {% for plan in pass_options %}
+        <div class="col-md-4">
+            <div class="card card-premium p-4 h-100 text-center border-0 d-flex flex-column justify-content-between">
+                <div>
+                    <span class="badge bg-primary-subtle text-primary px-3 py-2 text-uppercase mb-3" style="border-radius:20px; font-weight:600;">{{ plan.type }} Package</span>
+                    <h2 class="display-5 fw-bold text-dark mb-3">₹{{ "{:,.0f}".format(plan.price) }}</h2>
+                    <p class="text-secondary small mb-4">{{ plan.description }}</p>
+                </div>
+                
+                <button type="button" class="btn btn-csmss-primary w-100 py-3 select-pass-btn" 
+                        data-bs-toggle="modal" data-bs-target="#paymentModal"
+                        data-pass-type="{{ plan.type }}" data-price="{{ plan.price }}">
+                    <i class="fas fa-credit-card me-2"></i> Subscribe Plan
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Simulated Checkout Modal -->
+<div class="modal fade" id="paymentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content overflow-hidden border-0 shadow-lg" style="border-radius: 20px;">
+            <div class="modal-header modal-payment-header py-3 px-4">
+                <h5 class="modal-title fw-bold" style="font-family:'Outfit';">CSMSS Commute checkout</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            
+            <form id="simulatedPaymentForm">
+                <div class="modal-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                        <div>
+                            <span class="text-muted small">COMMUTE PLAN</span>
+                            <h5 id="modalPassType" class="fw-bold text-dark mb-0">Monthly Pass</h5>
+                        </div>
+                        <div class="text-end">
+                            <span class="text-muted small">TOTAL COST</span>
+                            <h4 id="modalPrice" class="fw-bold text-success mb-0">₹500</h4>
+                        </div>
+                    </div>
+
+                    <!-- Hidden variables -->
+                    <input type="hidden" id="modalPassTypeInput" name="pass_type">
+                    <input type="hidden" id="modalPriceInput" name="price">
+                    <input type="hidden" id="paymentMethodInput" name="payment_method" value="Razorpay Sim">
+
+                    <label class="form-label small fw-bold mb-2">Simulate Payment Method</label>
+                    <div class="d-flex flex-column gap-2 mb-4">
+                        <button type="button" class="payment-method-btn active" data-method="Razorpay Sim">
+                            <i class="fab fa-cc-amazon-pay text-primary fa-lg"></i> Razorpay Simulation Gateway
+                        </button>
+                        <button type="button" class="payment-method-btn" data-method="Stripe Sim">
+                            <i class="fab fa-stripe-s text-danger fa-lg"></i> Stripe Test Mode Gateway
+                        </button>
+                    </div>
+
+                    <!-- Mock Card Form -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-12">
+                            <label class="form-label small text-muted mb-1">Debit / Credit Card Number</label>
+                            <input type="text" class="form-control" placeholder="4111 2222 3333 4444" required style="border-radius:8px;">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small text-muted mb-1">Expiration Date</label>
+                            <input type="text" class="form-control" placeholder="MM/YY" required style="border-radius:8px;">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small text-muted mb-1">Card Security Code (CVV)</label>
+                            <input type="password" class="form-control" placeholder="•••" maxlength="3" required style="border-radius:8px;">
+                        </div>
+                    </div>
+
+                    <div id="paymentSpinner" class="d-none text-center py-3">
+                        <div class="spinner-border text-primary mb-2" role="status"></div>
+                        <p class="text-muted small mb-0">Verifying security codes and processing transfer...</p>
+                    </div>
+                </div>
+
+                <div class="modal-footer bg-light border-0 py-3">
+                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal" style="border-radius: 12px;">Cancel</button>
+                    <button type="submit" id="processPaymentBtn" class="btn btn-csmss-primary px-4"><i class="fas fa-check-circle me-1"></i> Confirm & Pay</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

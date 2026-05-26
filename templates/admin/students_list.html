@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Commuter Directory{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Admin Sidebar -->
+    <div class="sidebar-glass no-print">
+        <div class="text-center mb-4 pb-3 border-bottom">
+            <span class="badge bg-warning text-dark px-3 py-2 text-uppercase fw-bold">Admin Controller</span>
+            <p class="small text-white-50 mt-2 mb-0">CSMSS Transportation Cell</p>
+        </div>
+        <a href="{{ url_for('admin_dashboard') }}" class="sidebar-link"><i class="fas fa-chart-line"></i> Dashboard Home</a>
+        <a href="{{ url_for('admin_routes') }}" class="sidebar-link"><i class="fas fa-route"></i> Manage Routes</a>
+        <a href="{{ url_for('admin_staff') }}" class="sidebar-link"><i class="fas fa-users-cog"></i> Manage Staff</a>
+        <a href="{{ url_for('admin_students') }}" class="sidebar-link active"><i class="fas fa-user-graduate"></i> Commuter Directory</a>
+        <a href="{{ url_for('admin_passes') }}" class="sidebar-link"><i class="fas fa-id-card"></i> Commuter Passes</a>
+        <a href="{{ url_for('admin_payments') }}" class="sidebar-link"><i class="fas fa-money-bill-wave"></i> Payment Logs</a>
+        <a href="{{ url_for('admin_attendance') }}" class="sidebar-link"><i class="fas fa-clipboard-list"></i> Commute Attendance</a>
+        <a href="{{ url_for('admin_notices') }}" class="sidebar-link"><i class="fas fa-bullhorn"></i> Notice Settings</a>
+        <a href="{{ url_for('admin_settings') }}" class="sidebar-link"><i class="fas fa-cog"></i> System Settings</a>
+    </div>
+
+    <!-- Content -->
+    <div class="dashboard-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="fw-bold mb-1" style="font-family:'Outfit';">Commuter Directory</h1>
+                <p class="text-muted small">View registered students commuting on college buses.</p>
+            </div>
+            <!-- Search Input -->
+            <div class="w-25 no-print">
+                <input type="text" class="form-control table-search-input py-2" data-target-table="studentsTable" placeholder="Search students..." style="border-radius:10px;">
+            </div>
+        </div>
+
+        <div class="card card-premium overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover table-premium mb-0" id="studentsTable">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Commuter ID</th>
+                            <th>Student Name</th>
+                            <th>Email Address</th>
+                            <th>Mobile Number</th>
+                            <th>Subscribed Passes</th>
+                            <th class="text-center">Action Controls</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if students %}
+                            {% for std in students %}
+                            <tr>
+                                <td class="ps-4"><span class="badge bg-secondary px-3 py-2" style="border-radius:8px;">#{{ std.id }}</span></td>
+                                <td><strong class="text-dark">{{ std.name }}</strong></td>
+                                <td class="small">{{ std.email }}</td>
+                                <td class="small">{{ std.phone or 'N/A' }}</td>
+                                <td>
+                                    {% if std.passes %}
+                                        <span class="badge bg-success-subtle text-success px-2 py-1"><i class="fas fa-id-card me-1"></i> Pass Registered</span>
+                                    {% else %}
+                                        <span class="badge bg-warning-subtle text-warning px-2 py-1"><i class="fas fa-id-card-alt me-1"></i> No Pass</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="{{ url_for('admin_edit_student', id=std.id) }}" class="btn btn-sm btn-outline-primary" style="border-radius:8px;"><i class="fas fa-edit"></i> Edit</a>
+                                        <a href="{{ url_for('admin_delete_student', id=std.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this student commuter?');" style="border-radius:8px;"><i class="fas fa-trash"></i> Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    <i class="fas fa-user-graduate fa-2x mb-3 text-secondary"></i>
+                                    <p class="mb-0">No student commuters registered in the system yet.</p>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

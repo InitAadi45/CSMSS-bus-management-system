@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Notice Board{% endblock %}
+
+{% block content %}
+<div class="container my-5 py-4">
+    <div class="text-center mb-5 animate-fade-in">
+        <h1 class="fw-bold" style="font-family: 'Outfit'; color: var(--primary-color);">Official Announcements</h1>
+        <p class="text-muted">Stay up to date with scheduling notices, delay forecasts, and transit alerts.</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            {% if notices %}
+                <div class="d-flex flex-column gap-4">
+                    {% for notice in notices %}
+                    <div class="card card-premium p-4 border-0 position-relative">
+                        <div class="d-flex flex-wrap align-items-center justify-content-between mb-3 border-bottom pb-2">
+                            <h4 class="fw-bold mb-1 text-dark">{{ notice.title }}</h4>
+                            <span class="text-secondary small"><i class="fas fa-calendar-alt me-1 text-warning"></i> {{ notice.created_at.strftime('%A, %d %B %Y at %I:%M %p') }}</span>
+                        </div>
+                        <p class="text-secondary" style="line-height: 1.6;">{{ notice.body }}</p>
+                        
+                        <div class="d-flex flex-wrap gap-2 align-items-center justify-content-between mt-3 pt-2 border-top">
+                            <span class="small text-muted"><i class="fas fa-user-edit text-primary me-1"></i> Posted by: {{ notice.author.name }} ({{ notice.author.role.capitalize() }})</span>
+                            {% if notice.route %}
+                                <span class="badge bg-danger-subtle text-danger px-3 py-2" style="border-radius:12px;">
+                                    <i class="fas fa-bus me-1"></i> Affects Bus: {{ notice.route.bus_number }}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-5 border rounded-4 bg-white shadow-sm">
+                    <i class="fas fa-folder-open fa-3x mb-3 text-secondary"></i>
+                    <p class="text-muted mb-0">The announcement board is currently clear.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

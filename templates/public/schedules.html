@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Bus Routes & Schedules{% endblock %}
+
+{% block content %}
+<div class="container my-5 py-4">
+    <div class="text-center mb-5 animate-fade-in">
+        <h1 class="fw-bold" style="font-family: 'Outfit'; color: var(--primary-color);">Bus Routes & Schedules</h1>
+        <p class="text-muted">Explore timings, bus numbers, and exact stops for all CSMSS routes.</p>
+    </div>
+
+    <!-- Search / Filter Bar -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-8">
+            <form action="{{ url_for('schedules') }}" method="GET" class="card card-premium p-3 border-0">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-0"><i class="fas fa-search text-muted"></i></span>
+                    <input type="text" class="form-control border-0 table-search-input" data-target-table="schedulesTable" name="search" value="{{ search_q }}" placeholder="Search by route name, via points, or bus number (e.g. Paithan, CIDCO)...">
+                    <button type="submit" class="btn btn-csmss-primary px-4" style="border-radius:12px;"><i class="fas fa-search me-1"></i> Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Routes list -->
+    <div class="card card-premium overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-hover table-premium mb-0" id="schedulesTable">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Bus No.</th>
+                        <th>Route Name</th>
+                        <th>Via Commute Points</th>
+                        <th>Campus Timings</th>
+                        <th class="text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if routes %}
+                        {% for route in routes %}
+                        <tr>
+                            <td class="ps-4"><span class="badge bg-primary px-3 py-2" style="border-radius:8px;">{{ route.bus_number }}</span></td>
+                            <td><strong class="text-dark">{{ route.route_name }}</strong></td>
+                            <td class="text-secondary small">{{ route.via_points }}</td>
+                            <td class="small">
+                                <span class="d-block text-success"><strong>Pickup:</strong> {{ route.pickup_time }}</span>
+                                <span class="d-block text-danger"><strong>Dropoff:</strong> {{ route.dropoff_time }}</span>
+                            </td>
+                            <td class="text-center">
+                                {% if route.status == 'On Time' %}
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2" style="border-radius:20px;">
+                                        <i class="fas fa-check-circle me-1"></i> On Time
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2" style="border-radius:20px;" data-bs-toggle="tooltip" title="{{ route.delay_reason }}">
+                                        <i class="fas fa-exclamation-triangle me-1"></i> {{ route.status }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                <i class="fas fa-bus-slash fa-3x mb-3 text-secondary"></i>
+                                <p class="mb-0">No bus routes matching your query were found.</p>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

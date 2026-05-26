@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Commuter Dashboard{% endblock %}
+
+{% block content %}
+<div class="container my-5 py-4">
+    <!-- Student Header -->
+    <div class="d-flex justify-content-between align-items-center mb-5 animate-fade-in no-print">
+        <div>
+            <h1 class="fw-bold mb-1" style="font-family:'Outfit';">Commuter Dashboard</h1>
+            <p class="text-muted small">Welcome, {{ current_user.name }}! Check your commute status below.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('student_buy_pass') }}" class="btn btn-csmss-secondary"><i class="fas fa-qrcode me-1"></i> Buy / Renew Bus Pass</a>
+            <a href="{{ url_for('student_routes') }}" class="btn btn-csmss-primary"><i class="fas fa-bus me-1"></i> View Route Timetables</a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Commute Pass Card -->
+        <div class="col-md-5">
+            {% if active_pass %}
+                <div class="bus-pass-card mb-4 animate-fade-in">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <span class="badge bg-warning text-dark px-3 py-2 text-uppercase mb-2" style="border-radius:12px; font-weight:600;">CSMSS BUS PASS</span>
+                            <h4 class="text-white fw-bold mb-0 mt-1">{{ current_user.name }}</h4>
+                            <small class="text-white-50">Commuter ID: #{{ current_user.id }}</small>
+                        </div>
+                        <div class="pass-qr-holder">
+                            <!-- Real QR Code Generator using QR Server API -->
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=PassID:{{ active_pass.id }}|User:{{ current_user.name }}|End:{{ active_pass.end_date }}" alt="QR Commuter Pass" style="width: 85px; height: 85px;">
+                        </div>
+                    </div>
+                    
+                    <div class="bus-pass-chip mt-4"></div>
+                    
+                    <div class="row g-2 mt-3 pt-3 border-top border-white-10">
+                        <div class="col-6">
+                            <span class="d-block text-white-50 small">PASS TERM</span>
+                            <strong class="text-white">{{ active_pass.pass_type }}</strong>
+                        </div>
+                        <div class="col-6 text-end">
+                            <span class="d-block text-white-50 small">EXPIRES ON</span>
+                            <strong class="text-white">{{ active_pass.end_date.strftime('%Y-%m-%d') }}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expiry details -->
+                <div class="card card-premium p-4 border-0 mb-4 text-center">
+                    <h5 class="fw-bold text-muted mb-2">VALIDITY COUNTDOWN</h5>
+                    <div class="display-4 fw-bold text-success">{{ active_pass.remaining_days }}</div>
+                    <span class="text-muted small">Commute days remaining before expiration</span>
+                    
+                    {% if active_pass.remaining_days <= 7 %}
+                        <div class="alert alert-warning border-0 p-3 small mb-0 mt-3" style="border-radius: 12px;">
+                            <i class="fas fa-exclamation-triangle me-1"></i> Your bus pass is expiring soon. Click "Buy / Renew Bus Pass" above to stay registered.
+                        </div>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="card card-premium p-5 text-center mb-4 border-0">
+                    <div class="bg-danger-subtle text-danger rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 80px; height: 80px;">
+                        <i class="fas fa-id-card-alt fa-3x"></i>
+                    </div>
+                    <h4 class="fw-bold mb-2">No Active Bus Pass</h4>
+                    <p class="text-muted small mb-4">You currently do not have a valid, paid bus pass registered. Buy or renew online to access campus Commutes.</p>
+                    <a href="{{ url_for('student_buy_pass') }}" class="btn btn-csmss-secondary w-100 py-3"><i class="fas fa-shopping-cart me-1"></i> Get Bus Pass Now</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Attendance & Billing logs -->
+        <div class="col-md-7">
+            <!-- Commute Attendance log -->
+            <div class="card card-premium p-4 border-0 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0 text-dark"><i class="fas fa-clipboard-check text-success me-2"></i> Attendance Log</h5>
+                    <span class="badge bg-primary px-3 py-2">Commutes Logged: {{ attendances|length }}</span>
+                </div>
+                
+                <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+                    <table class="table table-sm small table-hover">
+                        <thead>
+                            <tr class="table-light">
+                                <th>Date</th>
+                                <th>Bus Route</th>
+                                <th class="text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if attendances %}
+                                {% for att in attendances %}
+                                <tr>
+                                    <td>{{ att.date.strftime('%Y-%m-%d') }}</td>
+                                    <td>Bus No. {{ att.route.bus_number }} - {{ att.route.route_name }}</td>
+                                    <td class="text-center">
+                                        {% if att.status == 'Present' %}
+                                            <span class="text-success fw-bold"><i class="fas fa-check-circle me-1"></i> Present</span>
+                                        {% else %}
+                                            <span class="text-danger fw-bold"><i class="fas fa-times-circle me-1"></i> Absent</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted py-3">No commuting logs recorded. Board a college bus to register checks.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pass payment billing logs -->
+            <div class="card card-premium p-4 border-0">
+                <h5 class="fw-bold mb-3 text-dark"><i class="fas fa-money-bill-wave text-warning me-2"></i> Billing & Receipt History</h5>
+                
+                <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+                    <table class="table table-sm small table-hover">
+                        <thead>
+                            <tr class="table-light">
+                                <th>Transaction Ref</th>
+                                <th>Term</th>
+                                <th>Price</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if passes %}
+                                {% for p in passes %}
+                                <tr>
+                                    <td><code class="text-dark small">{{ p.payment_id }}</code></td>
+                                    <td>{{ p.pass_type }}</td>
+                                    <td><strong>₹{{ "{:,.2f}".format(p.price) }}</strong></td>
+                                    <td class="text-center">
+                                        <a href="{{ url_for('student_receipt', id=p.id) }}" class="btn btn-sm btn-outline-secondary" style="border-radius: 6px;"><i class="fas fa-print"></i> Receipt</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-3">No transaction receipts logged.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

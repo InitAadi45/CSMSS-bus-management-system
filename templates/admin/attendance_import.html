@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Import Commute Attendance{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Admin Sidebar -->
+    <div class="sidebar-glass no-print">
+        <div class="text-center mb-4 pb-3 border-bottom">
+            <span class="badge bg-warning text-dark px-3 py-2 text-uppercase fw-bold">Admin Controller</span>
+            <p class="small text-white-50 mt-2 mb-0">CSMSS Transportation Cell</p>
+        </div>
+        <a href="{{ url_for('admin_dashboard') }}" class="sidebar-link"><i class="fas fa-chart-line"></i> Dashboard Home</a>
+        <a href="{{ url_for('admin_routes') }}" class="sidebar-link"><i class="fas fa-route"></i> Manage Routes</a>
+        <a href="{{ url_for('admin_staff') }}" class="sidebar-link"><i class="fas fa-users-cog"></i> Manage Staff</a>
+        <a href="{{ url_for('admin_students') }}" class="sidebar-link"><i class="fas fa-user-graduate"></i> Commuter Directory</a>
+        <a href="{{ url_for('admin_passes') }}" class="sidebar-link"><i class="fas fa-id-card"></i> Commuter Passes</a>
+        <a href="{{ url_for('admin_payments') }}" class="sidebar-link"><i class="fas fa-money-bill-wave"></i> Payment Logs</a>
+        <a href="{{ url_for('admin_attendance') }}" class="sidebar-link active"><i class="fas fa-clipboard-list"></i> Commute Attendance</a>
+        <a href="{{ url_for('admin_notices') }}" class="sidebar-link"><i class="fas fa-bullhorn"></i> Notice Settings</a>
+        <a href="{{ url_for('admin_settings') }}" class="sidebar-link"><i class="fas fa-cog"></i> System Settings</a>
+    </div>
+
+    <!-- Content -->
+    <div class="dashboard-content">
+        <div class="mb-4">
+            <h1 class="fw-bold mb-1" style="font-family:'Outfit';">Import Commuter Sheets</h1>
+            <p class="text-muted small">Bulk upload student attendance logs or enrollment databases using spreadsheets.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-7">
+                <div class="card card-premium p-5 border-0">
+                    <h5 class="fw-bold mb-3 text-dark"><i class="fas fa-file-excel text-success me-2"></i> Upload Document</h5>
+                    <p class="text-muted small mb-4">Select a spreadsheet document in CSV or XLSX format to insert data.</p>
+                    
+                    <form action="{{ url_for('admin_import_attendance') }}" method="POST" enctype="multipart/form-data">
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold">Select Spreadsheet File</label>
+                            <input type="file" class="form-control py-3" name="file" accept=".csv, .xlsx" required style="border-radius:12px;">
+                        </div>
+                        
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-csmss-primary py-3 px-5"><i class="fas fa-cloud-upload-alt me-1"></i> Process Upload</button>
+                            <a href="{{ url_for('admin_attendance') }}" class="btn btn-outline-secondary py-3 px-5" style="border-radius: 12px;">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Formatting Guide -->
+            <div class="col-md-5">
+                <div class="card card-premium p-4 border-0">
+                    <h5 class="fw-bold mb-3 text-primary"><i class="fas fa-info-circle text-warning me-2"></i> Formatting Guide</h5>
+                    <p class="text-muted small">To avoid database rejection, ensure your spreadsheet conforms to the structure below:</p>
+                    
+                    <table class="table table-bordered table-sm small text-muted mt-3">
+                        <thead>
+                            <tr class="table-light">
+                                <th>Header Column</th>
+                                <th>Expected Format</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>student_email</code></td>
+                                <td>Registered student email (lowercase)</td>
+                            </tr>
+                            <tr>
+                                <td><code>date</code></td>
+                                <td>Commute date (YYYY-MM-DD)</td>
+                            </tr>
+                            <tr>
+                                <td><code>status</code></td>
+                                <td>Commute Status (Present or Absent)</td>
+                            </tr>
+                            <tr>
+                                <td><code>route_number_or_id</code></td>
+                                <td>Registered Route Bus Code (Optional)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="alert alert-warning border-0 p-3 small mb-0 mt-3" style="border-radius: 12px;">
+                        <i class="fas fa-exclamation-circle me-1"></i> Standard encoding is UTF-8. Non-matching commuter email accounts will log failure alerts in notifications.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

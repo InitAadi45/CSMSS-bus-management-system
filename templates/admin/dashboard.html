@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Control Panel{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Admin Sidebar Menu -->
+    <div class="sidebar-glass no-print">
+        <div class="text-center mb-4 pb-3 border-bottom">
+            <span class="badge bg-warning text-dark px-3 py-2 text-uppercase fw-bold">Admin Controller</span>
+            <p class="small text-white-50 mt-2 mb-0">CSMSS Transportation Cell</p>
+        </div>
+        
+        <a href="{{ url_for('admin_dashboard') }}" class="sidebar-link active">
+            <i class="fas fa-chart-line"></i> Dashboard Home
+        </a>
+        <a href="{{ url_for('admin_routes') }}" class="sidebar-link">
+            <i class="fas fa-route"></i> Manage Routes
+        </a>
+        <a href="{{ url_for('admin_staff') }}" class="sidebar-link">
+            <i class="fas fa-users-cog"></i> Manage Staff
+        </a>
+        <a href="{{ url_for('admin_students') }}" class="sidebar-link">
+            <i class="fas fa-user-graduate"></i> Commuter Directory
+        </a>
+        <a href="{{ url_for('admin_passes') }}" class="sidebar-link">
+            <i class="fas fa-id-card"></i> Commuter Passes
+        </a>
+        <a href="{{ url_for('admin_payments') }}" class="sidebar-link">
+            <i class="fas fa-money-bill-wave"></i> Payment Logs
+        </a>
+        <a href="{{ url_for('admin_attendance') }}" class="sidebar-link">
+            <i class="fas fa-clipboard-list"></i> Commute Attendance
+        </a>
+        <a href="{{ url_for('admin_notices') }}" class="sidebar-link">
+            <i class="fas fa-bullhorn"></i> Notice Settings
+        </a>
+        <a href="{{ url_for('admin_settings') }}" class="sidebar-link">
+            <i class="fas fa-cog"></i> System Settings
+        </a>
+    </div>
+
+    <!-- Main Admin Dashboard Content -->
+    <div class="dashboard-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="fw-bold mb-1" style="font-family:'Outfit';">Dashboard Overview</h1>
+                <p class="text-muted small">Real-time status metrics of CSMSS bus services and financials.</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('admin_issue_pass') }}" class="btn btn-csmss-secondary"><i class="fas fa-plus-circle me-1"></i> Issue Pass Manually</a>
+                <a href="{{ url_for('admin_import_attendance') }}" class="btn btn-csmss-primary"><i class="fas fa-upload me-1"></i> Import Attendance</a>
+            </div>
+        </div>
+
+        <!-- Metric Cards -->
+        <div class="row g-4 mb-5">
+            <!-- Total Revenue -->
+            <div class="col-md-3">
+                <div class="card card-premium card-stat p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="small text-muted fw-bold d-block mb-1">TOTAL REVENUE</span>
+                            <h3 class="fw-bold text-dark mb-0">₹{{ "{:,.2f}".format(total_revenue) }}</h3>
+                        </div>
+                        <div class="bg-success-subtle text-success p-3 rounded-4">
+                            <i class="fas fa-rupee-sign fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Active Passes -->
+            <div class="col-md-3">
+                <div class="card card-premium card-stat stat-passes p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="small text-muted fw-bold d-block mb-1">ACTIVE PASSES</span>
+                            <h3 class="fw-bold text-dark mb-0">{{ active_passes }} <small class="text-muted fs-6">/ {{ total_passes }}</small></h3>
+                        </div>
+                        <div class="bg-warning-subtle text-warning p-3 rounded-4">
+                            <i class="fas fa-qrcode fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Total Commuters -->
+            <div class="col-md-3">
+                <div class="card card-premium card-stat p-3" style="border-left-color: #3b82f6;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="small text-muted fw-bold d-block mb-1">STUDENTS REGISTERED</span>
+                            <h3 class="fw-bold text-dark mb-0">{{ total_students }}</h3>
+                        </div>
+                        <div class="bg-primary-subtle text-primary p-3 rounded-4">
+                            <i class="fas fa-user-graduate fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Delayed Commutes -->
+            <div class="col-md-3">
+                <div class="card card-premium card-stat stat-delays p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="small text-muted fw-bold d-block mb-1">ROUTE DELAYS</span>
+                            <h3 class="fw-bold text-dark mb-0">{{ delayed_routes }} <small class="text-muted fs-6">delayed</small></h3>
+                        </div>
+                        <div class="bg-danger-subtle text-danger p-3 rounded-4">
+                            <i class="fas fa-exclamation-triangle fa-2x animate-pulse"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Charts -->
+        <div class="row g-4 mb-5">
+            <!-- Line Chart: Monthly Revenue -->
+            <div class="col-md-8">
+                <div class="card card-premium p-4 border-0 h-100">
+                    <h5 class="fw-bold mb-4" style="color:var(--primary-color);"><i class="fas fa-chart-line text-warning me-2"></i> Monthly Revenue Collections (₹)</h5>
+                    <div style="position: relative; height: 320px;">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <!-- Pie Chart: Pass Types Distribution -->
+            <div class="col-md-4">
+                <div class="card card-premium p-4 border-0 h-100">
+                    <h5 class="fw-bold mb-4" style="color:var(--primary-color);"><i class="fas fa-chart-pie text-warning me-2"></i> Pass Subscriptions</h5>
+                    <div style="position: relative; height: 280px;" class="d-flex align-items-center justify-content-center">
+                        <canvas id="passTypeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart initialization scripts -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. Line Chart Setup
+    const revCtx = document.getElementById('revenueChart').getContext('2d');
+    const revenueLabels = {{ revenue_chart.labels|tojson }};
+    const revenueData = {{ revenue_chart.data|tojson }};
+    
+    new Chart(revCtx, {
+        type: 'line',
+        data: {
+            labels: revenueLabels.length > 0 ? revenueLabels : ['May 2026'],
+            datasets: [{
+                label: 'Pass Sales Revenue (₹)',
+                data: revenueData.length > 0 ? revenueData : [0],
+                borderColor: '#1e3a8a',
+                backgroundColor: 'rgba(30, 58, 138, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 6,
+                pointBackgroundColor: '#d97706'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: '#f1f5f9' }
+                },
+                x: {
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+
+    // 2. Pie Chart Setup
+    const passCtx = document.getElementById('passTypeChart').getContext('2d');
+    const passTypesData = {{ pass_types|tojson }};
+    
+    new Chart(passCtx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(passTypesData),
+            datasets: [{
+                data: Object.values(passTypesData),
+                backgroundColor: ['#1e3a8a', '#d97706', '#dc2626'],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { boxWidth: 12, font: { family: 'Poppins' } }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Commuter Receipt #{{ bus_pass.id }}{% endblock %}
+
+{% block content %}
+<div class="container my-5 py-4">
+    <!-- Action controls header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 no-print animate-fade-in">
+        <a href="{{ url_for('student_dashboard') if current_user.role == 'student' else url_for('admin_passes') }}" class="btn btn-outline-secondary px-4" style="border-radius:12px;">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+        <button onclick="window.print();" class="btn btn-csmss-primary px-4"><i class="fas fa-print me-1"></i> Print Receipt</button>
+    </div>
+
+    <!-- Printable Receipt Card -->
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card card-premium p-5 border-0">
+                <div class="row align-items-center mb-4 pb-3 border-bottom">
+                    <div class="col-md-2 text-center text-md-start">
+                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="CSMSS Logo" style="height: 90px;">
+                    </div>
+                    <div class="col-md-10 text-center text-md-start mt-3 mt-md-0">
+                        <h4 class="fw-bold mb-1" style="font-family:'Outfit'; color: var(--primary-color);">{{ college_name }}</h4>
+                        <p class="text-secondary small mb-0">{{ college_address }}</p>
+                        <span class="badge bg-secondary-subtle text-secondary mt-2">CSMSS Commute Receipt</span>
+                    </div>
+                </div>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <span class="text-muted small d-block">COMMUTER DETAILS</span>
+                        <strong class="text-dark d-block fs-5">{{ bus_pass.student.name }}</strong>
+                        <span class="small text-muted">{{ bus_pass.student.email }}</span><br>
+                        <span class="small text-muted">{{ bus_pass.student.phone or 'No mobile logged' }}</span>
+                    </div>
+                    
+                    <div class="col-md-6 text-md-end">
+                        <span class="text-muted small d-block">RECEIPT METADATA</span>
+                        <strong class="text-dark d-block">Receipt ID: #REC-{{ bus_pass.id }}</strong>
+                        <span class="small text-muted d-block">Transaction Ref: <code>{{ bus_pass.payment_id }}</code></span>
+                        <span class="small text-muted d-block">Purchased Date: {{ bus_pass.created_at.strftime('%Y-%m-%d %I:%M %p') }}</span>
+                    </div>
+                </div>
+
+                <div class="card p-4 border-dashed bg-light mb-4" style="border: 2px dashed #cbd5e1; border-radius:16px;">
+                    <h5 class="fw-bold text-dark mb-3"><i class="fas fa-ticket-alt text-warning me-2"></i> Pass Subscription Summary</h5>
+                    <div class="row g-3 text-center">
+                        <div class="col-3 border-end">
+                            <span class="text-muted small d-block">TYPE</span>
+                            <strong class="text-dark small">{{ bus_pass.pass_type }}</strong>
+                        </div>
+                        <div class="col-3 border-end">
+                            <span class="text-muted small d-block">VALID FROM</span>
+                            <strong class="text-dark small">{{ bus_pass.start_date.strftime('%Y-%m-%d') }}</strong>
+                        </div>
+                        <div class="col-3 border-end">
+                            <span class="text-muted small d-block">VALID TILL</span>
+                            <strong class="text-dark small">{{ bus_pass.end_date.strftime('%Y-%m-%d') }}</strong>
+                        </div>
+                        <div class="col-3">
+                            <span class="text-muted small d-block">COST</span>
+                            <strong class="text-success small">₹{{ "{:,.2f}".format(bus_pass.price) }}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row align-items-center">
+                    <div class="col-md-3 text-center mb-3 mb-md-0">
+                        <div class="pass-qr-holder p-2 bg-white border d-inline-block rounded-3">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=PassID:{{ bus_pass.id }}|User:{{ bus_pass.student.name }}|End:{{ bus_pass.end_date }}" alt="Voucher QR Code" style="width: 100px; height: 100px;">
+                        </div>
+                    </div>
+                    <div class="col-md-9 text-center text-md-start">
+                        <h6 class="fw-bold mb-1 text-dark"><i class="fas fa-shield-alt text-success me-1"></i> Digital Security Check</h6>
+                        <p class="text-muted small mb-0">Show this receipt or the active QR code inside your Student Commuter Dashboard to the bus in-charge (staff) upon boarding for check-in audits.</p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-5 pt-4 border-top text-muted small">
+                    <p class="mb-0">This is a digitally generated transit pass transaction receipt. No physical signature is required.</p>
+                    <p class="fw-bold text-dark mt-1">Thank you for commuting with CSMSS!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
